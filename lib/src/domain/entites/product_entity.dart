@@ -13,7 +13,7 @@ class ProductsEntity {
   String? description;
   String? category;
   double? price;
-  double? discountPercentage;
+  num? discountPercentage;
   double? rating;
   int? stock;
   List<String>? tags;
@@ -57,8 +57,8 @@ class ProductsEntity {
 }
 
 class DimensionsEntity {
-  double? width;
-  double? height;
+  num? width;
+  num? height;
   double? depth;
 
   DimensionsEntity({this.width, this.height, this.depth});

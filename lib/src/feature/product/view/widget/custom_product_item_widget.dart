@@ -10,9 +10,11 @@ import 'package:route_task/src/utils/app_colors.dart';
 import 'package:route_task/src/utils/app_text_style.dart';
 
 class ProductItem extends StatelessWidget {
-  final String pathImage;
-  final String descriptionImage;
-  final String price;
+  final String? pathImage;
+  final String? descriptionImage;
+  final double? price;
+  final num? priceOld;
+  final double? rating;
 
   final void Function()? onTapLove;
   final void Function()? onTapAddCard;
@@ -24,6 +26,8 @@ class ProductItem extends StatelessWidget {
     required this.price,
     required this.onTapLove,
     required this.onTapAddCard,
+    required this.priceOld,
+    required this.rating,
   }) : super(key: key);
 
   @override
@@ -41,22 +45,20 @@ class ProductItem extends StatelessWidget {
           Stack(
             children: [
               ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15.r),
-                    topRight: Radius.circular(15.r),
-                  ),
-                  child: Image.asset(pathImage)
-                  //  CachedNetworkImage(
-                  //   imageUrl: pathImage,
-                  //   placeholder: (context, url) =>
-                  //       const ShimmerProductItemImage(),
-                  //   errorWidget: (context, url, error) =>
-                  //       Image.asset('assets/image/item_2.png'),
-                  //   width: double.infinity,
-                  //   height: 140.h,
-                  //   fit: BoxFit.fill,
-                  // ),
-                  ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.r),
+                  topRight: Radius.circular(15.r),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: pathImage ?? "",
+                  placeholder: (context, url) =>
+                      const ShimmerProductItemImage(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  width: double.infinity,
+                  height: 100.h,
+                  fit: BoxFit.contain,
+                ),
+              ),
               Positioned(
                 right: -3,
                 child: InkWell(
@@ -75,35 +77,62 @@ class ProductItem extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.h,
-              vertical: 5.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 5.h),
             child: Text(
-              descriptionImage,
+              descriptionImage ?? "",
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyle.textStyle16.copyWith(
-                color: AppColors.primaryColor,
+              style: AppTextStyle.textStyle12.copyWith(
+                fontSize: 13.sp,
+                color: const Color(0xff06004F),
                 height: 0,
               ),
             ),
           ),
-          Gap(7.h),
+          const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: EdgeInsets.symmetric(horizontal: 5.h),
+            child: Text.rich(
+              TextSpan(
+                text: 'EGP ',
+                style: AppTextStyle.textStyle14.copyWith(
+                  fontSize: 14.sp,
+                  color: const Color(0xff06004F),
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: "$price   ",
+                  ),
+                  TextSpan(
+                    text: " $priceOld EGP",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.blueColor.withAlpha(100),
+                      decoration: TextDecoration.lineThrough,
+                      decorationColor: AppColors.blueColor,
+                      decorationStyle: TextDecorationStyle.solid,
+                      overflow: TextOverflow.ellipsis,
+                      decorationThickness: 1,
+                      height: 0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.h),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'EGP $price',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.textStyle18.copyWith(
-                    color: AppColors.primaryColor,
-                    height: 0,
+                  "Review ($rating)",
+                  style: const TextStyle(
+                    color: Color(0xff06004F),
                   ),
                 ),
+                const Icon(Icons.star, color: Colors.yellow, size: 20),
                 const Spacer(),
                 InkWell(
                   focusColor: Colors.transparent,
@@ -120,6 +149,7 @@ class ProductItem extends StatelessWidget {
               ],
             ),
           ),
+          const Spacer(),
         ],
       ),
     );
