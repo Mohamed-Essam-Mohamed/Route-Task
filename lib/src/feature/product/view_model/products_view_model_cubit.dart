@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:route_task/src/domain/entites/product_entity.dart';
 import 'package:route_task/src/domain/usecases/get_all_product_usecase.dart';
@@ -9,6 +10,9 @@ class ProductsViewModelCubit extends Cubit<ProductsViewModelState> {
   ProductsViewModelCubit({required this.getAllProductUseCase})
       : super(ProductsViewModelInitial());
   GetAllProductUseCase getAllProductUseCase;
+  var searchController = TextEditingController();
+  List<ProductsEntity> productsList = [];
+  List<ProductsEntity> productsListSearch = [];
   //? function get all Product
   void getProducts() async {
     emit(ProductsViewModelLoading());
@@ -18,8 +22,17 @@ class ProductsViewModelCubit extends Cubit<ProductsViewModelState> {
         emit(ProductsViewModelError(error: failure.errorMessage));
       },
       (response) {
-        emit(ProductsViewModelSuccess(productsList: response.products));
+        productsList = response.products ?? [];
+        emit(ProductsViewModelSuccess(productsList: response.products ?? []));
       },
     );
+  }
+
+  //? function search
+  void searchTextInList(String text) {
+    productsListSearch = productsList.where((product) {
+      return product.title!.toLowerCase().contains(text.toLowerCase());
+    }).toList();
+    emit(SearchViewModelSuccess(productDataEntity: productsListSearch));
   }
 }

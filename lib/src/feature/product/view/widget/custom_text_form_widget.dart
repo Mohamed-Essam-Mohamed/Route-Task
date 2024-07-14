@@ -11,11 +11,13 @@ class CustomTextFormFieldWidget extends StatefulWidget {
 
   TextEditingController controller;
   Validator myValidator;
+  void Function(String)? onChanged;
 
   CustomTextFormFieldWidget({
     this.keyboardType = TextInputType.text,
     required this.controller,
     required this.myValidator,
+    required this.onChanged,
   });
 
   @override
@@ -32,6 +34,7 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
         fontWeight: FontWeight.w400,
         color: AppColors.primaryColor,
       ),
+      onChanged: widget.onChanged,
       cursorColor: AppColors.blueColor,
       decoration: InputDecoration(
         // fillColor: AppColors.mobileSearchColor,
